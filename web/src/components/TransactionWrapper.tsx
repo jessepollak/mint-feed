@@ -10,22 +10,32 @@ import type {
   TransactionError,
   TransactionResponse,
 } from '@coinbase/onchainkit/transaction';
-import type { ContractFunctionParameters } from 'viem';
-import {
-  BASE_SEPOLIA_CHAIN_ID,
-  mintABI,
-  mintContractAddress,
-} from '../constants';
+import { useChainId, usePublicClient } from 'wagmi';
+import { createCollectorClient } from "@zoralabs/protocol-sdk";
 
-export default function TransactionWrapper() {
-  const contracts = [
-    {
-      address: mintContractAddress,
-      abi: mintABI,
-      functionName: 'mint',
-      args: [],
-    },
-  ] as unknown as ContractFunctionParameters[];
+interface TransactionWrapperProps {
+  tokenContract: string;
+  tokenId: bigint;
+  quantityToMint: number;
+}
+
+export default function TransactionWrapper({ tokenContract, tokenId, quantityToMint }: TransactionWrapperProps) {
+  const chainId = useChainId();
+  const publicClient = usePublicClient();
+
+  const collectorClient = createCollectorClient({ chainId, publicClient });
+
+  const handleMint = async () => {
+    const { parameters } = await collectorClient.mint({
+      tokenContract,
+      mintType: "1155",
+      tokenId,
+      quantityToMint,
+      mintComment: "Minted from feed",
+    });
+
+    return parameters;
+  };
 
   const handleError = (err: TransactionError) => {
     console.error('Transaction error:', err);
@@ -36,15 +46,17 @@ export default function TransactionWrapper() {
   };
 
   return (
-    <div className="flex w-[450px]">
+    <div className="flex w-full">
       <Transaction
-        contracts={contracts}
-        className="w-[450px]"
-        chainId={BASE_SEPOLIA_CHAIN_ID}
+        prepare={handleMint}
+        className="w-full"
+        chainId={chainId}
         onError={handleError}
         onSuccess={handleSuccess}
       >
-        <TransactionButton className="mt-0 mr-auto ml-auto w-[450px] max-w-full text-[white]" />
+        <TransactionButton className="mt-0 mr-auto ml-auto w-full max-w-full text-[white]">
+          Mint
+        </TransactionButton>
         <TransactionStatus>
           <TransactionStatusLabel />
           <TransactionStatusAction />

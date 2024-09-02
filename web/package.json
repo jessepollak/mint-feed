@@ -18,6 +18,8 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.30.0",
+    "@zoralabs/protocol-sdk": "^0.9.6",
+    "ipfs-http-client": "^60.0.1",
     "next": "^14.2.5",
     "permissionless": "^0.1.26",
     "react": "^18",
