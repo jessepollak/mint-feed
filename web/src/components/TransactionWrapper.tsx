@@ -1,32 +1,40 @@
-'use client';
+"use client";
 import {
   Transaction,
   TransactionButton,
   TransactionStatus,
   TransactionStatusAction,
   TransactionStatusLabel,
-} from '@coinbase/onchainkit/transaction';
+} from "@coinbase/onchainkit/transaction";
 import type {
   TransactionError,
   TransactionResponse,
-} from '@coinbase/onchainkit/transaction';
-import { useChainId } from 'wagmi';
-import { ContractFunctionParameters } from 'viem';
+} from "@coinbase/onchainkit/transaction";
+import { useChainId } from "wagmi";
+import { ContractFunctionParameters } from "viem";
+
+export interface ContractFunctionParametersWithValue
+  extends ContractFunctionParameters {
+  value?: bigint;
+}
 
 interface TransactionWrapperProps {
-  contracts: ContractFunctionParameters[];
+  contracts: ContractFunctionParametersWithValue[];
   buttonText: string;
 }
 
-export default function TransactionWrapper({ contracts, buttonText }: TransactionWrapperProps) {
+export default function TransactionWrapper({
+  contracts,
+  buttonText,
+}: TransactionWrapperProps) {
   const chainId = useChainId();
 
   const handleError = (err: TransactionError) => {
-    console.error('Transaction error:', err);
+    console.error("Transaction error:", err);
   };
 
   const handleSuccess = (response: TransactionResponse) => {
-    console.log('Transaction successful', response);
+    console.log("Transaction successful", response);
   };
 
   return (
@@ -38,8 +46,10 @@ export default function TransactionWrapper({ contracts, buttonText }: Transactio
         onError={handleError}
         onSuccess={handleSuccess}
       >
-        <TransactionButton className="mt-0 mr-auto ml-auto w-full max-w-full text-[white]" text={buttonText}>
-        </TransactionButton>
+        <TransactionButton
+          className="mt-0 mr-auto ml-auto w-full max-w-full text-[white]"
+          text={buttonText}
+        ></TransactionButton>
         <TransactionStatus>
           <TransactionStatusLabel />
           <TransactionStatusAction />
