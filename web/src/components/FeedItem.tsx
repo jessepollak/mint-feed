@@ -1,25 +1,25 @@
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import Image from "next/image"
+import { useEffect, useState } from "react"
 import TransactionWrapper, {
   ContractFunctionParametersWithValue,
-} from "./TransactionWrapper";
-import { ContractFunctionParameters } from "viem";
-import { useAccount } from "wagmi";
-import { parseUnits } from "viem";
+} from "./TransactionWrapper"
+import { ContractFunctionParameters } from "viem"
+import { useAccount } from "wagmi"
+import { parseUnits } from "viem"
 
 interface FeedItemProps {
-  tokenContract: `0x${string}`;
-  tokenId: bigint;
-  tokenURI: string;
-  name: string;
+  tokenContract: `0x${string}`
+  tokenId: bigint
+  tokenURI: string
+  name: string
 }
 
 const resolveIpfsUrl = (url: string) => {
   if (url.startsWith("ipfs://")) {
-    return `https://ipfs.io/ipfs/${url.slice(7)}`;
+    return `https://ipfs.io/ipfs/${url.slice(7)}`
   }
-  return url;
-};
+  return url
+}
 
 export default function FeedItem({
   tokenContract,
@@ -27,25 +27,25 @@ export default function FeedItem({
   tokenURI,
   name,
 }: FeedItemProps) {
-  const [metadata, setMetadata] = useState({ name, image: "" });
-  const { address } = useAccount();
+  const [metadata, setMetadata] = useState({ name, image: "" })
+  const { address } = useAccount()
 
   useEffect(() => {
     const fetchMetadata = async () => {
       try {
-        const response = await fetch(resolveIpfsUrl(tokenURI));
-        const data = await response.json();
+        const response = await fetch(resolveIpfsUrl(tokenURI))
+        const data = await response.json()
         setMetadata({
           name: data.name || name,
           image: resolveIpfsUrl(data.image) || "",
-        });
+        })
       } catch (error) {
-        console.error("Error fetching metadata:", error);
+        console.error("Error fetching metadata:", error)
       }
-    };
+    }
 
-    fetchMetadata();
-  }, [tokenURI, name]);
+    fetchMetadata()
+  }, [tokenURI, name])
 
   const contracts: ContractFunctionParametersWithValue[] = [
     {
@@ -77,9 +77,9 @@ export default function FeedItem({
       ],
       value: parseUnits("0.000111", 18),
     },
-  ];
+  ]
 
-  console.log(contracts);
+  console.log(contracts)
 
   return (
     <div className="border rounded-lg p-4 mb-4 w-full">
@@ -95,5 +95,5 @@ export default function FeedItem({
       <h2 className="text-xl font-bold mb-2">{metadata.name}</h2>
       <TransactionWrapper contracts={contracts} buttonText="Mint" />
     </div>
-  );
+  )
 }
