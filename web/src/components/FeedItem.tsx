@@ -6,6 +6,7 @@ import { useAccount } from 'wagmi';
 import { parseUnits } from 'viem';
 
 interface FeedItemProps {
+  value?: bigint;
   tokenContract: `0x${string}`;
   tokenId: bigint;
   tokenURI: string;
@@ -19,7 +20,7 @@ const resolveIpfsUrl = (url: string) => {
   return url;
 };
 
-export default function FeedItem({ tokenContract, tokenId, tokenURI, name }: FeedItemProps) {
+export default function FeedItem({ value, tokenContract, tokenId, tokenURI, name }: FeedItemProps) {
   const [metadata, setMetadata] = useState({ name, image: '' });
   const { address } = useAccount();
 
@@ -67,16 +68,13 @@ export default function FeedItem({ tokenContract, tokenId, tokenURI, name }: Fee
         tokenId,
         '0x0000000000000000000000000000000000000000', // blank mintReferral
         '' // comment
-      ],
-      value: parseUnits('0.000111', 18)
+      ]
     },
   ];
 
-  console.log(contracts);
-
   return (
     <div className="border rounded-lg p-4 mb-4 w-full">
-      <div className="relative w-full pb-[100%] mb-2">
+      <div className="relative w-full pb-[100%]">
         <Image 
           src={metadata.image} 
           alt={metadata.name} 
@@ -84,12 +82,14 @@ export default function FeedItem({ tokenContract, tokenId, tokenURI, name }: Fee
           objectFit="cover"
           className="rounded-lg"
         />
+        <div className="absolute bottom-4 left-4 right-4 bg-white p-2 rounded-lg">
+          <TransactionWrapper 
+            value={value}
+            contracts={contracts}
+            buttonText="Mint"
+          />
+        </div>
       </div>
-      <h2 className="text-xl font-bold mb-2">{metadata.name}</h2>
-      <TransactionWrapper 
-        contracts={contracts}
-        buttonText="Mint"
-      />
     </div>
   );
 }

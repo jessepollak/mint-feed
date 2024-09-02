@@ -1,15 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { createCollectorClient } from "@zoralabs/protocol-sdk";
-import { useChainId, usePublicClient } from 'wagmi';
+import { usePublicClient, useChainId } from 'wagmi';
 import FeedItem from './FeedItem';
 import { MintableReturn } from 'node_modules/@zoralabs/protocol-sdk/dist/mint/types';
-
-interface TokenMetadata {
-  id: string;
-  name: string;
-  image: string;
-}
 
 interface Zora1155FeedProps {
   collectionAddress: string;
@@ -56,6 +50,7 @@ export default function Zora1155Feed({ collectionAddress }: Zora1155FeedProps) {
           tokenContract={collectionAddress as `0x${string}`}
           tokenId={BigInt(token.token.tokenId)}
           tokenURI={token.token.tokenURI}
+          value={BigInt(token.token.salesConfig.mintFee)}
           name=""
         />
       ))}
