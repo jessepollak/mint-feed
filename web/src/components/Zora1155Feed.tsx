@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { createCollectorClient } from "@zoralabs/protocol-sdk";
 import { useChainId, usePublicClient } from 'wagmi';
+import FeedItem from './FeedItem';
+import { MintableReturn } from 'node_modules/@zoralabs/protocol-sdk/dist/mint/types';
 
 interface TokenMetadata {
   id: string;
@@ -22,7 +24,7 @@ const resolveIpfsUrl = (url: string) => {
 };
 
 export default function Zora1155Feed({ collectionAddress }: Zora1155FeedProps) {
-  const [tokens, setTokens] = useState<TokenMetadata[]>([]);
+  const [tokens, setTokens] = useState<MintableReturn[]>([]);
   const chainId = useChainId();
   const publicClient = usePublicClient();
 
@@ -37,31 +39,7 @@ export default function Zora1155Feed({ collectionAddress }: Zora1155FeedProps) {
           tokenContract: collectionAddress as `0x${string}`,
         });
 
-        const formattedTokens = await Promise.all(collection.tokens.map(async (token) => {
-          let metadata: TokenMetadata = {};
-
-          if (token.token.tokenURI) {
-            const resolvedUrl = resolveIpfsUrl(token.token.tokenURI);
-            try {
-              const response = await fetch(resolvedUrl);
-              const fetchedMetadata = await response.json();
-              metadata = {
-                name: fetchedMetadata.name || metadata.name,
-                image: resolveIpfsUrl(fetchedMetadata.image) || metadata.image,
-              };
-            } catch (error) {
-              console.error(`Error fetching metadata for token ${token.token.tokenId}:`, error);
-            }
-          }
-
-          return {
-            id: token.token.tokenId,
-            name: metadata.name ?? 'Unnamed Token',
-            image: metadata.image ?? 'default-image-url.jpg',
-          };
-        }));
-        
-        setTokens(formattedTokens);
+        setTokens(collection.tokens);
       } catch (error) {
         console.error("Error fetching tokens:", error);
       }
@@ -73,14 +51,13 @@ export default function Zora1155Feed({ collectionAddress }: Zora1155FeedProps) {
   return (
     <div className="flex flex-col items-center gap-6 w-full">
       {tokens.map((token) => (
-        <div key={token.id} className="w-full bg-white rounded-lg shadow-md">
-          <div className="aspect-w-1 aspect-h-1 w-full">
-            <img src={token.image} alt={token.name} className="w-full h-full object-contain rounded-t-lg" />
-          </div>
-          <div className="p-4">
-            <h2 className="text-xl font-semibold text-gray-800">{token.name}</h2>
-          </div>
-        </div>
+        <FeedItem
+          key={token.token.tokenId}
+          tokenContract={collectionAddress as `0x${string}`}
+          tokenId={BigInt(token.token.tokenId)}
+          tokenURI={token.token.tokenURI}
+          name=""
+        />
       ))}
     </div>
   );

@@ -10,32 +10,16 @@ import type {
   TransactionError,
   TransactionResponse,
 } from '@coinbase/onchainkit/transaction';
-import { useChainId, usePublicClient } from 'wagmi';
-import { createCollectorClient } from "@zoralabs/protocol-sdk";
+import { useChainId } from 'wagmi';
+import { ContractFunctionParameters } from 'viem';
 
 interface TransactionWrapperProps {
-  tokenContract: string;
-  tokenId: bigint;
-  quantityToMint: number;
+  contracts: ContractFunctionParameters[];
+  buttonText: string;
 }
 
-export default function TransactionWrapper({ tokenContract, tokenId, quantityToMint }: TransactionWrapperProps) {
+export default function TransactionWrapper({ contracts, buttonText }: TransactionWrapperProps) {
   const chainId = useChainId();
-  const publicClient = usePublicClient();
-
-  const collectorClient = createCollectorClient({ chainId, publicClient });
-
-  const handleMint = async () => {
-    const { parameters } = await collectorClient.mint({
-      tokenContract,
-      mintType: "1155",
-      tokenId,
-      quantityToMint,
-      mintComment: "Minted from feed",
-    });
-
-    return parameters;
-  };
 
   const handleError = (err: TransactionError) => {
     console.error('Transaction error:', err);
@@ -48,14 +32,13 @@ export default function TransactionWrapper({ tokenContract, tokenId, quantityToM
   return (
     <div className="flex w-full">
       <Transaction
-        prepare={handleMint}
+        contracts={contracts}
         className="w-full"
         chainId={chainId}
         onError={handleError}
         onSuccess={handleSuccess}
       >
-        <TransactionButton className="mt-0 mr-auto ml-auto w-full max-w-full text-[white]">
-          Mint
+        <TransactionButton className="mt-0 mr-auto ml-auto w-full max-w-full text-[white]" text={buttonText}>
         </TransactionButton>
         <TransactionStatus>
           <TransactionStatusLabel />
