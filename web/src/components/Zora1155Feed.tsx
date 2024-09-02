@@ -42,6 +42,8 @@ export default function Zora1155Feed({ collectionAddress }: Zora1155FeedProps) {
     fetchTokens();
   }, [collectionAddress, chainId, publicClient]);
 
+  if (tokens.length === 0) return null;
+
   return (
     <div className="flex flex-col items-center gap-6 w-full">
       {tokens.map((token) => (

@@ -72,6 +72,8 @@ export default function FeedItem({ value, tokenContract, tokenId, tokenURI, name
     },
   ];
 
+  if (!metadata.image) return null;
+
   return (
     <div className="border rounded-lg p-4 mb-4 w-full">
       <div className="relative w-full pb-[100%]">

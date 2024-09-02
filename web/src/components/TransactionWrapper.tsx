@@ -15,13 +15,13 @@ export default function TransactionWrapper({ value, contracts, buttonText }: Tra
   const [isLoading, setIsLoading] = useState(false);
   const { sendCallsAsync } = useSendCalls();
 
-  console.log(value, contracts, chainId)
 
   const handleTransaction = async () => {
     setIsLoading(true);
     try {
+      console.log(value, contracts, chainId);
       const result = await sendCallsAsync({
-        chainId,
+        chainId: 84532,
         calls: contracts.map(contract => ({
           to: contract.address,
           data: encodeFunctionData({
