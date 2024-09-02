@@ -24,7 +24,10 @@
     "permissionless": "^0.1.26",
     "react": "^18",
     "react-dom": "^18",
-    "siwe": "^2.3.2"
+    "siwe": "^2.3.2",
+    "viem": "npm:@lukasrosario/viem@2.17.4-sessionkeys.7",
+    "wagmi": "npm:@lukasrosario/wagmi@2.11.1-sessionkeys.6",
+    "webauthn-p256": "npm:@lukasrosario/webauthn-p256@0.0.10-sessionkeys.6"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",
@@ -48,5 +51,9 @@
     "typescript": "^5.3.3",
     "utf-8-validate": "^6.0.3",
     "vitest": "^2.0.1"
+  },
+  "resolutions": {
+    "viem": "npm:@lukasrosario/viem@2.17.4-sessionkeys.7",
+    "wagmi": "npm:@lukasrosario/wagmi@2.11.1-sessionkeys.6"
   }
 }
