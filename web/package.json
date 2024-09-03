@@ -54,7 +54,7 @@
     "vitest": "^2.0.1"
   },
   "resolutions": {
-    "wagmi": "npm:@lukasrosario/wagmi@2.11.1-sessionkeys.6",
-    "viem": "npm:@lukasrosario/viem@2.17.4-sessionkeys.7"
+    "viem": "npm:@lukasrosario/viem@2.17.4-sessionkeys.7",
+    "wagmi": "npm:@lukasrosario/wagmi@2.11.1-sessionkeys.6"
   }
 }

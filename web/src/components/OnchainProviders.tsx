@@ -7,6 +7,7 @@ import { baseSepolia } from 'viem/chains';
 import { WagmiProvider } from 'wagmi';
 import { NEXT_PUBLIC_CDP_API_KEY } from '../config';
 import { useWamigConfig } from '../wagmi';
+import { PermissionsProvider } from '../contexts/PermissionsContext';
 
 type Props = { children: ReactNode };
 
@@ -20,7 +21,9 @@ function OnchainProviders({ children }: Props) {
       <QueryClientProvider client={queryClient}>
         <OnchainKitProvider apiKey={NEXT_PUBLIC_CDP_API_KEY} chain={baseSepolia}>
           <RainbowKitProvider modalSize="compact">
-            {children}
+            <PermissionsProvider>
+              {children}
+            </PermissionsProvider>
           </RainbowKitProvider>
         </OnchainKitProvider>
       </QueryClientProvider>
