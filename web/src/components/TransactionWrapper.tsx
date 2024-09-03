@@ -10,6 +10,7 @@ interface TransactionWrapperProps {
   value?: bigint;
   contracts: ContractFunctionParameters[];
   buttonText: string;
+  onSuccess?: () => void; // Add this line
 }
 
 function encodeContractCall(contract: ContractFunctionParameters, value: bigint)  {
@@ -24,7 +25,7 @@ function encodeContractCall(contract: ContractFunctionParameters, value: bigint)
   };
 }
 
-export default function TransactionWrapper({ value, contracts, buttonText }: TransactionWrapperProps) {
+export default function TransactionWrapper({ value, contracts, buttonText, onSuccess }: TransactionWrapperProps) {
   const chainId = useChainId();
   const [isLoading, setIsLoading] = useState(false);
   const { sendCallsAsync } = useSendCalls();
@@ -80,6 +81,9 @@ export default function TransactionWrapper({ value, contracts, buttonText }: Tra
 
       const result = await sendCallsAsync(transactionOptions);
       console.log('Transaction successful', result);
+      if (onSuccess) {
+        onSuccess(); // Call the onSuccess callback if provided
+      }
     } catch (error) {
       console.error('Transaction error:', error);
     } finally {

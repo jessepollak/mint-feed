@@ -22,6 +22,7 @@ const resolveIpfsUrl = (url: string) => {
 
 export default function FeedItem({ value, tokenContract, tokenId, tokenURI, name }: FeedItemProps) {
   const [metadata, setMetadata] = useState({ name, image: '' });
+  const [isMinted, setIsMinted] = useState(false);
   const { address } = useAccount();
 
   useEffect(() => {
@@ -72,6 +73,10 @@ export default function FeedItem({ value, tokenContract, tokenId, tokenURI, name
     },
   ];
 
+  const handleTransactionSuccess = () => {
+    setIsMinted(true);
+  };
+
   if (!metadata.image) return null;
 
   return (
@@ -85,11 +90,21 @@ export default function FeedItem({ value, tokenContract, tokenId, tokenURI, name
           className="rounded-lg"
         />
         <div className="absolute bottom-4 left-4 right-4 bg-white p-2 rounded-lg">
-          <TransactionWrapper 
-            value={value}
-            contracts={contracts}
-            buttonText="Mint"
-          />
+          {isMinted ? (
+            <button 
+              disabled
+              className="w-full bg-gray-400 text-white py-2 px-4 rounded cursor-not-allowed"
+            >
+              You minted!
+            </button>
+          ) : (
+            <TransactionWrapper 
+              value={value}
+              contracts={contracts}
+              buttonText="Mint"
+              onSuccess={handleTransactionSuccess}
+            />
+          )}
         </div>
       </div>
     </div>
