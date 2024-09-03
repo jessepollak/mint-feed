@@ -3,12 +3,22 @@ import Footer from 'src/components/Footer';
 import TransactionWrapper from 'src/components/TransactionWrapper';
 import WalletWrapper from 'src/components/WalletWrapper';
 import Zora1155Feed from 'src/components/Zora1155Feed';
-import { useAccount } from 'wagmi';
+import { useAccount, useSwitchChain, useChainId } from 'wagmi';
 import LoginButton from '../components/LoginButton';
 import SignupButton from '../components/SignupButton';
+import { useEffect } from 'react';
 
 export default function Page() {
   const { address } = useAccount();
+
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
+
+  useEffect(() => {
+    if (chainId !== 84532) {
+      switchChain({ chainId: 84532 });
+    }
+  }, [chainId, switchChain]);
 
   // Replace this with the actual collection address you want to display
   const collectionAddress = '0x985f4402f83ad886971ba95bc80a3500d0d50c4e';

@@ -52,7 +52,7 @@ export default function Zora1155Feed({ collectionAddress }: Zora1155FeedProps) {
           tokenContract={collectionAddress as `0x${string}`}
           tokenId={BigInt(token.token.tokenId)}
           tokenURI={token.token.tokenURI}
-          value={BigInt(token.token.salesConfig.mintFee)}
+          value={BigInt(token.token?.salesConfig?.mintFee || 0)}
           name=""
         />
       ))}
